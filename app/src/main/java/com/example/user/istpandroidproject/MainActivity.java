@@ -11,6 +11,12 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+    static final String[] pokemonNames = {
+            "小火龍",
+            "傑尼龜",
+            "妙蛙種子"
+    };
+
     TextView infoText;
     EditText nameText;
     RadioGroup optionsGrp;
@@ -42,7 +48,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int selectedRadioButtonViewId = optionsGrp.getCheckedRadioButtonId();
             View selectedRadioButton = optionsGrp.findViewById(selectedRadioButtonViewId);
             selectedOptionIndex = optionsGrp.indexOfChild(selectedRadioButton);
-            
+
+            String welcomeMessage = String.format(
+                    "你好, 訓練家%s 歡迎來到神奇寶貝的世界, 你的第一個夥伴是%s",
+                    nameOfTheTrainer,
+                    pokemonNames[selectedOptionIndex]);
+
+            infoText.setText(welcomeMessage);
+
         }
 
     }
