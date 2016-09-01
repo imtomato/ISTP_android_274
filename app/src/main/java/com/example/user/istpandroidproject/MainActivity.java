@@ -1,15 +1,19 @@
 package com.example.user.istpandroidproject;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener{
 
     static final String[] pokemonNames = {
             "小火龍",
@@ -32,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         infoText = (TextView)findViewById(R.id.infoText);
         nameText = (EditText)findViewById(R.id.nameText);
+        nameText.setOnEditorActionListener(this);
+        nameText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
         optionsGrp = (RadioGroup)findViewById(R.id.optionsGroup);
         confirmBtn = (Button)findViewById(R.id.confirmButton);
         confirmBtn.setOnClickListener(this);
@@ -60,6 +67,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if(actionId == EditorInfo.IME_ACTION_DONE) {
+            //dismiss virtual keyboard
+            InputMethodManager inm =
+                    (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            inm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
+            //simulate button clicked
+            confirmBtn.performClick();
 
+            return true;
+        }
+
+        return false;
+    }
 }
