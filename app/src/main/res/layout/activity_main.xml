@@ -16,5 +16,69 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"></RelativeLayout>
+        android:layout_weight="2"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="請輸入你的個人資訊"
+            android:id="@+id/infoText"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="29dp"
+            android:textSize="16sp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/nameText"
+            android:layout_below="@+id/infoText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:hint="請輸入你的名字" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameText"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/optionsGroup"
+            android:layout_marginTop="15dp">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小火龍"
+                android:id="@+id/radioButton"
+                android:layout_gravity="left"
+                android:checked="true" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="傑尼龜"
+                android:id="@+id/radioButton2"
+                android:layout_gravity="left" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="妙蛙種子"
+                android:id="@+id/radioButton3"
+                android:layout_gravity="left" />
+        </RadioGroup>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="確認"
+            android:id="@+id/confirmButton"
+            android:layout_below="@+id/optionsGroup"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp" />
+    </RelativeLayout>
 </LinearLayout>
