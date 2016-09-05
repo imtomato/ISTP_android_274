@@ -73,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="340"
-        android:id="@+id/textView3"
+        android:id="@+id/maxHP"
         android:layout_alignTop="@+id/textView2"
         android:layout_toEndOf="@+id/textView2" />
 </RelativeLayout>
