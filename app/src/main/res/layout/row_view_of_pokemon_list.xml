@@ -57,7 +57,8 @@
         android:text="170"
         android:id="@+id/currentHP"
         android:layout_alignTop="@+id/levelText"
-        android:layout_alignStart="@+id/hpBar" />
+        android:layout_alignStart="@+id/hpBar"
+        android:layout_alignLeft="@+id/hpBar"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,6 +67,7 @@
         android:id="@+id/textView2"
         android:layout_alignTop="@+id/currentHP"
         android:layout_toEndOf="@+id/currentHP"
+        android:layout_alignRight="@+id/currentHP"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp" />
 
