@@ -25,15 +25,11 @@ public class PokemonListActivity extends AppCompatActivity {
         ArrayList<OwnedPokemonInfo> ownedPokemonInfos =
                 dataManager.getOwnedPokemonInfos();
 
-        ArrayList<String> pokemonNames = new ArrayList<>();
-        for(OwnedPokemonInfo ownedPokemonInfo : ownedPokemonInfos) {
-            pokemonNames.add(ownedPokemonInfo.name);
-        }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        PokemonListAdapter arrayAdapter = new PokemonListAdapter(
                 this,
-                android.R.layout.simple_list_item_1,
-                pokemonNames
+                R.layout.row_view_of_pokemon_list,
+                ownedPokemonInfos
         );
 
         ListView listView = (ListView)findViewById(R.id.listView);
