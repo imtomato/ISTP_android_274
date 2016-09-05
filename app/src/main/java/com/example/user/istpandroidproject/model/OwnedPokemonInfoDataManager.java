@@ -31,9 +31,10 @@ public class OwnedPokemonInfoDataManager {
 
             while((line = reader.readLine()) != null) {
                 dataFields = line.split(",");
-                //TODO: construct a object from dataFields
+                ownedPokemonInfos.add(constructPokemonInfo(dataFields));
             }
 
+            reader.close();
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -41,6 +42,28 @@ public class OwnedPokemonInfoDataManager {
 
     }
 
+    OwnedPokemonInfo constructPokemonInfo(String[] dataFields) {
+        OwnedPokemonInfo ownedPokemonInfo = new OwnedPokemonInfo();
+        ownedPokemonInfo.pokemonId = Integer.valueOf(dataFields[0]);
+        ownedPokemonInfo.name = dataFields[2];
+        ownedPokemonInfo.level = Integer.valueOf(dataFields[3]);
+        ownedPokemonInfo.currentHP = Integer.valueOf(dataFields[4]);
+        ownedPokemonInfo.maxHP = Integer.valueOf(dataFields[5]);
+        ownedPokemonInfo.type1Index = Integer.valueOf(dataFields[6]);
+        ownedPokemonInfo.type2Index = Integer.valueOf(dataFields[7]);
 
+        String[] skills = new String[OwnedPokemonInfo.maxNumSkills];
+        for(int i = 8;i < dataFields.length;i++) {
+            skills[i - 8] = dataFields[i];
+        }
+
+        ownedPokemonInfo.skills = skills;
+
+        return ownedPokemonInfo;
+    }
+
+    public ArrayList<OwnedPokemonInfo> getOwnedPokemonInfos() {
+        return ownedPokemonInfos;
+    }
 
 }

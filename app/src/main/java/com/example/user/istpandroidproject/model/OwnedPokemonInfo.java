@@ -9,7 +9,7 @@ public class OwnedPokemonInfo {
     public static String[] typeNames;
 
     public String name;
-    public String pokemonId;
+    public int pokemonId;
     public int level;
     public int currentHP;
     public int maxHP;
