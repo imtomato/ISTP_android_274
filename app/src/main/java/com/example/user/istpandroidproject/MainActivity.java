@@ -2,6 +2,7 @@ package com.example.user.istpandroidproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener{
 
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String nameOfTheTrainer;
     int selectedOptionIndex;
 
+    Handler uiHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         confirmBtn = (Button)findViewById(R.id.confirmButton);
         confirmBtn.setOnClickListener(this);
 
+        uiHandler = new Handler(getMainLooper());
     }
 
     @Override
@@ -64,13 +69,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             infoText.setText(welcomeMessage);
 
-            Intent intent = new Intent();
-            intent.setClass(MainActivity.this, PokemonListActivity.class);
-            startActivity(intent);
+            //execute jumpToNewActivityTask on Main thread after 3 secs
+            uiHandler.postDelayed(jumpToNewActivityTask, 3 * 1000);
 
         }
 
     }
+
+    Runnable jumpToNewActivityTask = new Runnable() {
+
+        @Override
+        public void run() {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, PokemonListActivity.class);
+            startActivity(intent);
+        }
+
+    };
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
