@@ -13,6 +13,7 @@ public class OwnedPokemonInfoDataManager {
 
     Context mContext;
     ArrayList<OwnedPokemonInfo> ownedPokemonInfos;
+    ArrayList<OwnedPokemonInfo> initThreePokemonInfos;
 
     public OwnedPokemonInfoDataManager(Context context) {
         mContext = context;
@@ -20,12 +21,30 @@ public class OwnedPokemonInfoDataManager {
 
     public void loadListViewData() {
         ownedPokemonInfos = new ArrayList<>();
+        initThreePokemonInfos = new ArrayList<>();
 
         BufferedReader reader;
         String line = null;
         String[] dataFields = null;
 
         try {
+
+            reader = new BufferedReader(new InputStreamReader(
+                    mContext.getAssets().open("pokemon_types.csv")));
+            OwnedPokemonInfo.typeNames = reader.readLine().split(",");
+
+            reader.close();
+
+            reader = new BufferedReader(new InputStreamReader(
+                    mContext.getAssets().open("init_pokemon_data.csv")));
+
+            while((line = reader.readLine()) != null) {
+                dataFields = line.split(",");
+                initThreePokemonInfos.add(constructPokemonInfo(dataFields));
+            }
+
+            reader.close();
+
             reader = new BufferedReader(new InputStreamReader(
                     mContext.getAssets().open("pokemon_data.csv")));
 
