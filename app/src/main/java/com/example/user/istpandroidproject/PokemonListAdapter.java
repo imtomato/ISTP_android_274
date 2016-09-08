@@ -95,9 +95,18 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> {
 
         }
 
+        public void setSelected() {
+            mData.isSelected = !mData.isSelected;
+            mRowView.setActivated(mData.isSelected);
+            
+        }
+
         @Override
         public void onClick(View v) {
-
+            int viewId = v.getId();
+            if(viewId == R.id.appearanceImg) {
+                setSelected();
+            }
         }
     }
 
