@@ -76,11 +76,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public final static String selectedOptionIndexKey = "selectedOptionIndex";
+
     Runnable jumpToNewActivityTask = new Runnable() {
 
         @Override
         public void run() {
             Intent intent = new Intent();
+
+//            Bundle bundle = new Bundle();
+//            bundle.putInt(selectedOptionIndexKey, selectedOptionIndex);
+//
+//            intent.putExtra("bundle", bundle);
+
+            intent.putExtra(selectedOptionIndexKey, selectedOptionIndex);
+
             intent.setClass(MainActivity.this, PokemonListActivity.class);
             startActivity(intent);
         }

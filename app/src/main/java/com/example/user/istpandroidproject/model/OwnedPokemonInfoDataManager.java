@@ -85,4 +85,8 @@ public class OwnedPokemonInfoDataManager {
         return ownedPokemonInfos;
     }
 
+    public ArrayList<OwnedPokemonInfo> getInitThreePokemonInfos() {
+        return initThreePokemonInfos;
+    }
+
 }
