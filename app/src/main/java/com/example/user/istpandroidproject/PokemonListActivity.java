@@ -1,5 +1,6 @@
 package com.example.user.istpandroidproject;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,6 +22,9 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon_list);
 
+        Intent srcIntent = getIntent();
+        int selectedOptionIndex = srcIntent.getIntExtra(MainActivity.selectedOptionIndexKey, 0);
+
         OwnedPokemonInfoDataManager dataManager =
                 new OwnedPokemonInfoDataManager(this);
 
@@ -28,6 +32,10 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
 
         ArrayList<OwnedPokemonInfo> ownedPokemonInfos =
                 dataManager.getOwnedPokemonInfos();
+
+        ArrayList<OwnedPokemonInfo> initThreePokemonInfos = dataManager.getInitThreePokemonInfos();
+        OwnedPokemonInfo selectedPokemon = initThreePokemonInfos.get(selectedOptionIndex);
+        ownedPokemonInfos.add(0, selectedPokemon);
 
         arrayAdapter = new PokemonListAdapter(
                 this,
