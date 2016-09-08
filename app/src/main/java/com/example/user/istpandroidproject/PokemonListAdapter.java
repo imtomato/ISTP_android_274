@@ -93,7 +93,7 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> implement
         //bind mRowView with data
         public void setView(OwnedPokemonInfo data) {
             mData = data;
-
+            mRowView.setActivated(mData.isSelected);
             mNameText.setText(data.name);
             mLevelText.setText(String.valueOf(data.level));
             mCurrentHP.setText(String.valueOf(data.currentHP));

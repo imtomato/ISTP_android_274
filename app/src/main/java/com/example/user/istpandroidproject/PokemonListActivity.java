@@ -28,7 +28,7 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
 
         ArrayList<OwnedPokemonInfo> ownedPokemonInfos =
                 dataManager.getOwnedPokemonInfos();
-        
+
         arrayAdapter = new PokemonListAdapter(
                 this,
                 R.layout.row_view_of_pokemon_list,
@@ -58,7 +58,11 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.action_delete) {
-            //TODO: implement deleting selected items
+            for(OwnedPokemonInfo ownedPokemonInfo : arrayAdapter.selectedPokemonInfos) {
+                arrayAdapter.remove(ownedPokemonInfo);
+            }
+            arrayAdapter.selectedPokemonInfos.clear();
+            invalidateOptionsMenu();
             return true;
         }
         else if(itemId == R.id.action_settings) {
