@@ -1,6 +1,7 @@
 package com.example.user.istpandroidproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -62,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     pokemonNames[selectedOptionIndex]);
 
             infoText.setText(welcomeMessage);
+
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, PokemonListActivity.class);
+            startActivity(intent);
 
         }
 
