@@ -23,6 +23,7 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> implement
     int rowViewLayoutId;
     LayoutInflater mInflater;
     public ArrayList<OwnedPokemonInfo> selectedPokemonInfos = new ArrayList<>();
+    public OnPokemonSelectedChangeListener listener;
 
     public PokemonListAdapter(Context context, int layoutId, List<OwnedPokemonInfo> objects) {
         super(context, layoutId, objects);
@@ -60,6 +61,7 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> implement
         else {
             selectedPokemonInfos.remove(data);
         }
+        listener.onSelectedChanged(data);
     }
 
     public static class ViewHolder implements View.OnClickListener{

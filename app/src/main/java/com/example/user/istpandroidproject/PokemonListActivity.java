@@ -12,7 +12,9 @@ import com.example.user.istpandroidproject.model.OwnedPokemonInfoDataManager;
 
 import java.util.ArrayList;
 
-public class PokemonListActivity extends AppCompatActivity {
+public class PokemonListActivity extends AppCompatActivity implements OnPokemonSelectedChangeListener{
+
+    PokemonListAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +28,13 @@ public class PokemonListActivity extends AppCompatActivity {
 
         ArrayList<OwnedPokemonInfo> ownedPokemonInfos =
                 dataManager.getOwnedPokemonInfos();
-
-
-        PokemonListAdapter arrayAdapter = new PokemonListAdapter(
+        
+        arrayAdapter = new PokemonListAdapter(
                 this,
                 R.layout.row_view_of_pokemon_list,
                 ownedPokemonInfos
         );
+        arrayAdapter.listener = this;
 
         ListView listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(arrayAdapter);
@@ -41,9 +43,14 @@ public class PokemonListActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater()
-                .inflate(R.menu.selected_pokemon_list_action_bar, menu);
-        return true;
+        if(arrayAdapter.selectedPokemonInfos.isEmpty()) {
+            return false;
+        }
+        else {
+            getMenuInflater()
+                    .inflate(R.menu.selected_pokemon_list_action_bar, menu);
+            return true;
+        }
     }
 
 
@@ -64,5 +71,8 @@ public class PokemonListActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onSelectedChanged(OwnedPokemonInfo data) {
+        invalidateOptionsMenu();
+    }
 }
