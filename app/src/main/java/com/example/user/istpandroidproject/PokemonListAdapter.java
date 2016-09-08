@@ -50,7 +50,7 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> {
         return rowView;
     }
 
-    public static class ViewHolder {
+    public static class ViewHolder implements View.OnClickListener{
 
         View mRowView;
         ImageView mAppearanceImg;
@@ -73,6 +73,7 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> {
             mMaxHP = (TextView) rowView.findViewById(R.id.maxHP);
             mHPBar = (ProgressBar) rowView.findViewById(R.id.hpBar);
 
+            mAppearanceImg.setOnClickListener(this);
         }
 
         //bind mRowView with data
@@ -94,6 +95,10 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> {
 
         }
 
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 
 }
