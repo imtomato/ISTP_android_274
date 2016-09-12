@@ -59,9 +59,9 @@ public class DetailActivity extends AppCompatActivity {
         ImageLoader.getInstance().displayImage(imgUrl, detailImg);
 
         nameText.setText(data.name);
-        levelText.setText(data.level);
-        currentHP.setText(data.currentHP);
-        maxHP.setText(data.maxHP);
+        levelText.setText(String.valueOf(data.level));
+        currentHP.setText(String.valueOf(data.currentHP));
+        maxHP.setText(String.valueOf(data.maxHP));
 
         if(data.type1Index != -1) {
             type1Text.setText(OwnedPokemonInfo.typeNames[data.type1Index]);
