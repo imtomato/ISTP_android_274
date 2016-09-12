@@ -44,4 +44,17 @@ public class CustomizedActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d(debug_tag, activityName + ":onDestroy");
     }
+
+    @Override
+    public void onBackPressed() {
+        if(isTaskRoot()) {
+            //perform home button logic
+            moveTaskToBack(true);
+        }
+        else {
+            //default behaviour
+            super.onBackPressed();
+        }
+
+    }
 }

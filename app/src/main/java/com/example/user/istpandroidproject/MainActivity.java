@@ -94,6 +94,7 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
 
             intent.setClass(MainActivity.this, PokemonListActivity.class);
             startActivity(intent);
+            MainActivity.this.finish();
         }
 
     };
