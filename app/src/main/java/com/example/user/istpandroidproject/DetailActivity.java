@@ -14,13 +14,14 @@ import android.widget.TextView;
 import com.example.user.istpandroidproject.model.OwnedPokemonInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends CustomizedActivity {
 
     Resources mRes;
     String packageName;
     OwnedPokemonInfo mData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activityName = this.getClass().getSimpleName();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 

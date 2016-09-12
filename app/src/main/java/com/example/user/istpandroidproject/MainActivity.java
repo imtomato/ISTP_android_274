@@ -16,7 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener{
+public class MainActivity extends CustomizedActivity implements View.OnClickListener, TextView.OnEditorActionListener{
 
     static final String[] pokemonNames = {
             "小火龍",
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activityName = this.getClass().getSimpleName();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

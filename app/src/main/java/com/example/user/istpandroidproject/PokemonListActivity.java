@@ -15,13 +15,14 @@ import com.example.user.istpandroidproject.model.OwnedPokemonInfoDataManager;
 
 import java.util.ArrayList;
 
-public class PokemonListActivity extends AppCompatActivity implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener{
+public class PokemonListActivity extends CustomizedActivity implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener{
 
     PokemonListAdapter arrayAdapter;
     ArrayList<OwnedPokemonInfo> ownedPokemonInfos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activityName = this.getClass().getSimpleName();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon_list);
 
