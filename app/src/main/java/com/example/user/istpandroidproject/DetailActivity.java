@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.user.istpandroidproject.model.OwnedPokemonInfo;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -49,9 +50,43 @@ public class DetailActivity extends AppCompatActivity {
 
         ProgressBar hpBar = (ProgressBar)findViewById(R.id.HP_progressBar);
 
-        
+        String imgUrl = String.format(
+                "http://www.csie.ntu.edu.tw/~r03944003/detailImg/%d.png",
+                data.pokemonId);
+
+        ImageLoader.getInstance().displayImage(imgUrl, detailImg);
+
+        nameText.setText(data.name);
+        levelText.setText(data.level);
+        currentHP.setText(data.currentHP);
+        maxHP.setText(data.maxHP);
+
+        if(data.type1Index != -1) {
+            type1Text.setText(OwnedPokemonInfo.typeNames[data.type1Index]);
+        }
+        else {
+            type1Text.setText("");
+        }
 
 
+        if(data.type2Index != -1) {
+            type2Text.setText(OwnedPokemonInfo.typeNames[data.type2Index]);
+        }
+        else {
+            type2Text.setText("");
+        }
+
+        for(int i = 0;i < data.skills.length;i++) {
+            if(data.skills[i] != null) {
+                skillsText[i].setText(data.skills[i]);
+            }
+            else {
+                skillsText[i].setText("");
+            }
+        }
+
+        int hpPercentage = (int)((data.currentHP / (float)data.maxHP) * 100);
+        hpBar.setProgress(hpPercentage);
     }
 
 
