@@ -104,4 +104,21 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
         startActivityForResult(intent, detailActivityRequestCode);
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == detailActivityRequestCode) {
+
+            if(resultCode == DetailActivity.removeFromList) {
+                //TODO: find corresponding ownedPokemonInfo with name.
+            }
+            else if(resultCode == DetailActivity.levelUp) {
+
+            }
+
+
+        }
+
+    }
 }

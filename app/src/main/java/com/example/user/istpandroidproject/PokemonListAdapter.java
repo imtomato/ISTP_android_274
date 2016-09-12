@@ -124,4 +124,33 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> implement
         }
     }
 
+    public OwnedPokemonInfo getItemWithName(String name) {
+        for(int i = 0;i < getCount();i++) {
+            OwnedPokemonInfo ownedPokemonInfo = getItem(i);
+            if(ownedPokemonInfo.name.equals(name)) {
+                return ownedPokemonInfo;
+            }
+        }
+
+        return null;
+    }
+
+    public void update(OwnedPokemonInfo data) {
+        for(int i = 0;i < getCount();i++) {
+            OwnedPokemonInfo ownedPokemonInfo = getItem(i);
+            if(ownedPokemonInfo.name.equals(data.name)) {
+                ownedPokemonInfo.level = data.level;
+                ownedPokemonInfo.maxHP = data.maxHP;
+                ownedPokemonInfo.currentHP = data.currentHP;
+                ownedPokemonInfo.skills = data.skills;
+                ownedPokemonInfo.type2Index = data.type2Index;
+                ownedPokemonInfo.type1Index = data.type1Index;
+                ownedPokemonInfo.pokemonId = data.pokemonId;
+                break;
+            }
+        }
+
+    }
+
+
 }
