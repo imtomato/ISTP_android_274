@@ -91,6 +91,7 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
     }
 
     public final static int detailActivityRequestCode = 1;
+    public final static String ownedPokemonInfoKey = "parcelable";
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -98,7 +99,7 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
 
         Intent intent = new Intent();
         intent.setClass(PokemonListActivity.this, DetailActivity.class);
-        intent.putExtra("parcelable", data);
+        intent.putExtra(ownedPokemonInfoKey, data);
 
         startActivityForResult(intent, detailActivityRequestCode);
 
