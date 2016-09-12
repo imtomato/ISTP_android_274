@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -13,7 +15,7 @@ import com.example.user.istpandroidproject.model.OwnedPokemonInfoDataManager;
 
 import java.util.ArrayList;
 
-public class PokemonListActivity extends AppCompatActivity implements OnPokemonSelectedChangeListener{
+public class PokemonListActivity extends AppCompatActivity implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener{
 
     PokemonListAdapter arrayAdapter;
 
@@ -46,7 +48,7 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
 
         ListView listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(arrayAdapter);
-
+        listView.setOnItemClickListener(this);
     }
 
     @Override
@@ -86,5 +88,19 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
     @Override
     public void onSelectedChanged(OwnedPokemonInfo data) {
         invalidateOptionsMenu();
+    }
+
+    public final static int detailActivityRequestCode = 1;
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        OwnedPokemonInfo data = arrayAdapter.getItem(position);
+
+        Intent intent = new Intent();
+        intent.setClass(PokemonListActivity.this, DetailActivity.class);
+        intent.putExtra("parcelable", data);
+
+        startActivityForResult(intent, detailActivityRequestCode);
+
     }
 }
