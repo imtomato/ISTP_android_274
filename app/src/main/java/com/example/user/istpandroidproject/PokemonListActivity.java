@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class PokemonListActivity extends AppCompatActivity implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener{
 
     PokemonListAdapter arrayAdapter;
+    ArrayList<OwnedPokemonInfo> ownedPokemonInfos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
 
         dataManager.loadListViewData();
 
-        ArrayList<OwnedPokemonInfo> ownedPokemonInfos =
+        ownedPokemonInfos =
                 dataManager.getOwnedPokemonInfos();
 
         ArrayList<OwnedPokemonInfo> initThreePokemonInfos = dataManager.getInitThreePokemonInfos();
@@ -111,7 +112,11 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
         if(requestCode == detailActivityRequestCode) {
 
             if(resultCode == DetailActivity.removeFromList) {
-                //TODO: find corresponding ownedPokemonInfo with name.
+                OwnedPokemonInfo ownedPokemonInfo =
+                        arrayAdapter.getItemWithName(data.getStringExtra(OwnedPokemonInfo.nameKey));
+
+                arrayAdapter.remove(ownedPokemonInfo);
+                return;
             }
             else if(resultCode == DetailActivity.levelUp) {
 

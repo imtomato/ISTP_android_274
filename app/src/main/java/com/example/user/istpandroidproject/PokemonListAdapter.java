@@ -150,6 +150,10 @@ public class PokemonListAdapter extends ArrayAdapter<OwnedPokemonInfo> implement
             }
         }
 
+        notifyDataSetChanged();
+
+
+
     }
 
 
