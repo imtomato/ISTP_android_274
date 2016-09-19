@@ -1,5 +1,7 @@
 package com.example.user.istpandroidproject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,16 +11,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.user.istpandroidproject.model.OwnedPokemonInfo;
 import com.example.user.istpandroidproject.model.OwnedPokemonInfoDataManager;
 
 import java.util.ArrayList;
 
-public class PokemonListActivity extends CustomizedActivity implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener{
+public class PokemonListActivity extends CustomizedActivity implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener{
 
     PokemonListAdapter arrayAdapter;
     ArrayList<OwnedPokemonInfo> ownedPokemonInfos;
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,14 @@ public class PokemonListActivity extends CustomizedActivity implements OnPokemon
         ListView listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(this);
+
+        alertDialog = new AlertDialog
+                .Builder(this)
+                .setTitle("警告")
+                .setMessage("你確定要刪除這些神奇寶貝嗎?")
+                .setPositiveButton("確認", this)
+                .setNegativeButton("取消", this)
+                .create();
     }
 
     @Override
@@ -65,16 +77,19 @@ public class PokemonListActivity extends CustomizedActivity implements OnPokemon
         }
     }
 
+    void deleteSelectedPokemons() {
+        for(OwnedPokemonInfo ownedPokemonInfo : arrayAdapter.selectedPokemonInfos) {
+            arrayAdapter.remove(ownedPokemonInfo);
+        }
+        arrayAdapter.selectedPokemonInfos.clear();
+        invalidateOptionsMenu();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.action_delete) {
-            for(OwnedPokemonInfo ownedPokemonInfo : arrayAdapter.selectedPokemonInfos) {
-                arrayAdapter.remove(ownedPokemonInfo);
-            }
-            arrayAdapter.selectedPokemonInfos.clear();
-            invalidateOptionsMenu();
+            alertDialog.show();
             return true;
         }
         else if(itemId == R.id.action_settings) {
@@ -126,5 +141,17 @@ public class PokemonListActivity extends CustomizedActivity implements OnPokemon
 
         }
 
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if(dialog.equals(alertDialog)) {
+            if(which == AlertDialog.BUTTON_NEGATIVE) {
+                Toast.makeText(this, "取消刪除", Toast.LENGTH_SHORT).show();
+            }
+            else if(which == AlertDialog.BUTTON_POSITIVE) {
+                deleteSelectedPokemons();
+            }
+        }
     }
 }
