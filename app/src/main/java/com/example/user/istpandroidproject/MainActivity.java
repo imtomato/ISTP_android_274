@@ -14,8 +14,11 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 
 
 public class MainActivity extends CustomizedActivity implements View.OnClickListener, TextView.OnEditorActionListener{
@@ -30,6 +33,7 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
     EditText nameText;
     RadioGroup optionsGrp;
     Button confirmBtn;
+    ProgressBar progressBar;
 
     String nameOfTheTrainer;
     int selectedOptionIndex;
@@ -54,6 +58,14 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
         confirmBtn = (Button)findViewById(R.id.confirmButton);
         confirmBtn.setOnClickListener(this);
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setIndeterminateDrawable(new CircularProgressDrawable
+                .Builder(this)
+                .colors(getResources().getIntArray(R.array.gplus_colors))
+                .sweepSpeed(1f)
+                .strokeWidth(8f)
+                .build());
+
         uiHandler = new Handler(getMainLooper());
 
         SharedPreferences preferences = getSharedPreferences(
@@ -64,12 +76,18 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
         selectedOptionIndex = preferences.getInt(selectedIndexKey, 0);
 
         if(nameOfTheTrainer == null) {
-            //TODO: show confirm button, nameEditText and optionGroup.
-            //hide progress bar
+            confirmBtn.setVisibility(View.VISIBLE);
+            optionsGrp.setVisibility(View.VISIBLE);
+            nameText.setVisibility(View.VISIBLE);
+
+            progressBar.setVisibility(View.INVISIBLE);
         }
         else {
-            //TODO: hide confirm button, nameEditText and optionGroup.
-            //show progress bar
+            confirmBtn.setVisibility(View.INVISIBLE);
+            optionsGrp.setVisibility(View.INVISIBLE);
+            nameText.setVisibility(View.INVISIBLE);
+
+            progressBar.setVisibility(View.VISIBLE);
         }
     }
 
