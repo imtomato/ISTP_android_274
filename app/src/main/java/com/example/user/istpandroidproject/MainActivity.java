@@ -88,6 +88,8 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
             nameText.setVisibility(View.INVISIBLE);
 
             progressBar.setVisibility(View.VISIBLE);
+
+            confirmBtn.performClick();
         }
     }
 
@@ -97,20 +99,24 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
         if(viewId == R.id.confirmButton) {
             v.setClickable(false);
 
-            nameOfTheTrainer = nameText.getText().toString();
+            if(nameText.getVisibility() == View.VISIBLE &&
+                    optionsGrp.getVisibility() == View.VISIBLE) {
+                nameOfTheTrainer = nameText.getText().toString();
 
-            int selectedRadioButtonViewId = optionsGrp.getCheckedRadioButtonId();
-            View selectedRadioButton = optionsGrp.findViewById(selectedRadioButtonViewId);
-            selectedOptionIndex = optionsGrp.indexOfChild(selectedRadioButton);
+                int selectedRadioButtonViewId = optionsGrp.getCheckedRadioButtonId();
+                View selectedRadioButton = optionsGrp.findViewById(selectedRadioButtonViewId);
+                selectedOptionIndex = optionsGrp.indexOfChild(selectedRadioButton);
 
-            SharedPreferences preferences = getSharedPreferences(
-                    Application.class.getSimpleName(),
-                    MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(
+                        Application.class.getSimpleName(),
+                        MODE_PRIVATE);
 
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(nameOfTheTrainerKey, nameOfTheTrainer);
-            editor.putInt(selectedIndexKey, selectedOptionIndex);
-            editor.commit();
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(nameOfTheTrainerKey, nameOfTheTrainer);
+                editor.putInt(selectedIndexKey, selectedOptionIndex);
+                editor.commit();
+            }
+
 
             String welcomeMessage = String.format(
                     "你好, 訓練家%s 歡迎來到神奇寶貝的世界, 你的第一個夥伴是%s",
