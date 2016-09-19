@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -11,13 +14,14 @@ import android.widget.TextView;
 import com.example.user.istpandroidproject.model.OwnedPokemonInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends CustomizedActivity {
 
     Resources mRes;
     String packageName;
-
+    OwnedPokemonInfo mData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activityName = this.getClass().getSimpleName();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
@@ -25,9 +29,9 @@ public class DetailActivity extends AppCompatActivity {
         packageName = getPackageName();
 
         Intent srcIntent = getIntent();
-        OwnedPokemonInfo data = srcIntent.getParcelableExtra(PokemonListActivity.ownedPokemonInfoKey);
+        mData = srcIntent.getParcelableExtra(PokemonListActivity.ownedPokemonInfoKey);
 
-        setView(data);
+        setView(mData);
     }
 
     void setView(OwnedPokemonInfo data) {
@@ -91,5 +95,35 @@ public class DetailActivity extends AppCompatActivity {
         hpBar.setProgress(hpPercentage);
     }
 
+    //display action bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_action_bar, menu);
+        return true;
+    }
+
+    public final static int levelUp = 1;
+    public final static int removeFromList = 2;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if(itemId == R.id.action_save) {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra(OwnedPokemonInfo.nameKey, mData.name);
+            setResult(removeFromList, returnIntent);
+            finish();
+            Log.d("testFinish", "here");
+
+            return true;
+        }
+        else if(itemId == R.id.action_level_up) {
+
+            return true;
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
 }

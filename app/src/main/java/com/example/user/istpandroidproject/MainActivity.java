@@ -1,7 +1,9 @@
 package com.example.user.istpandroidproject;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,11 +14,14 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener{
+
+public class MainActivity extends CustomizedActivity implements View.OnClickListener, TextView.OnEditorActionListener{
 
     static final String[] pokemonNames = {
             "小火龍",
@@ -28,14 +33,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText nameText;
     RadioGroup optionsGrp;
     Button confirmBtn;
+    ProgressBar progressBar;
 
     String nameOfTheTrainer;
     int selectedOptionIndex;
 
     Handler uiHandler;
 
+    public final static String nameOfTheTrainerKey = "nameOfTheTrainer";
+    public final static String selectedIndexKey = "selectedIndex";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activityName = this.getClass().getSimpleName();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -48,7 +58,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         confirmBtn = (Button)findViewById(R.id.confirmButton);
         confirmBtn.setOnClickListener(this);
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setIndeterminateDrawable(new CircularProgressDrawable
+                .Builder(this)
+                .colors(getResources().getIntArray(R.array.gplus_colors))
+                .sweepSpeed(1f)
+                .strokeWidth(8f)
+                .build());
+
         uiHandler = new Handler(getMainLooper());
+
+        SharedPreferences preferences = getSharedPreferences(
+                Application.class.getSimpleName(),
+                MODE_PRIVATE);
+
+        nameOfTheTrainer = preferences.getString(nameOfTheTrainerKey, null);
+        selectedOptionIndex = preferences.getInt(selectedIndexKey, 0);
+
+        if(nameOfTheTrainer == null) {
+            confirmBtn.setVisibility(View.VISIBLE);
+            optionsGrp.setVisibility(View.VISIBLE);
+            nameText.setVisibility(View.VISIBLE);
+
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+        else {
+            confirmBtn.setVisibility(View.INVISIBLE);
+            optionsGrp.setVisibility(View.INVISIBLE);
+            nameText.setVisibility(View.INVISIBLE);
+
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -93,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             intent.setClass(MainActivity.this, PokemonListActivity.class);
             startActivity(intent);
+            MainActivity.this.finish();
         }
 
     };
