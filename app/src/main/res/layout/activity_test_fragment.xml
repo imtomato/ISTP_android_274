@@ -24,7 +24,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/fragmentBtn1">
+        android:layout_below="@+id/fragmentBtn1"
+        android:id="@+id/fragmentContainer">
 
     </FrameLayout>
 </RelativeLayout>
