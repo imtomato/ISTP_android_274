@@ -95,12 +95,22 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
     public void onClick(View v) {
         int viewId = v.getId();
         if(viewId == R.id.confirmButton) {
+            v.setClickable(false);
 
             nameOfTheTrainer = nameText.getText().toString();
 
             int selectedRadioButtonViewId = optionsGrp.getCheckedRadioButtonId();
             View selectedRadioButton = optionsGrp.findViewById(selectedRadioButtonViewId);
             selectedOptionIndex = optionsGrp.indexOfChild(selectedRadioButton);
+
+            SharedPreferences preferences = getSharedPreferences(
+                    Application.class.getSimpleName(),
+                    MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(nameOfTheTrainerKey, nameOfTheTrainer);
+            editor.putInt(selectedIndexKey, selectedOptionIndex);
+            editor.commit();
 
             String welcomeMessage = String.format(
                     "你好, 訓練家%s 歡迎來到神奇寶貝的世界, 你的第一個夥伴是%s",
@@ -113,6 +123,13 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
             uiHandler.postDelayed(jumpToNewActivityTask, 3 * 1000);
 
         }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        confirmBtn.setClickable(true);
 
     }
 
