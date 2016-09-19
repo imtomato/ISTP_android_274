@@ -35,6 +35,8 @@ public class TestFragmentActivity extends AppCompatActivity implements View.OnCl
         FragmentTransaction transaction =
                 fragmentManager.beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
+
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
