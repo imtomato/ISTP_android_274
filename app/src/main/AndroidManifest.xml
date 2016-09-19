@@ -25,7 +25,8 @@
         </activity>
         <activity android:name=".PokemonListActivity" />
         <activity android:name=".DetailActivity" />
-        <activity android:name=".CustomizedActivity"></activity>
+        <activity android:name=".CustomizedActivity" />
+        <activity android:name=".TestFragmentActivity"></activity>
     </application>
 
 </manifest>
