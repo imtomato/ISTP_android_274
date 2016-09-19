@@ -62,6 +62,7 @@ public class PokemonListActivity extends CustomizedActivity implements OnPokemon
                 .setMessage("你確定要刪除這些神奇寶貝嗎?")
                 .setPositiveButton("確認", this)
                 .setNegativeButton("取消", this)
+                .setCancelable(false)
                 .create();
     }
 
