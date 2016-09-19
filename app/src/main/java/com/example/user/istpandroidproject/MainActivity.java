@@ -1,7 +1,9 @@
 package com.example.user.istpandroidproject;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +36,9 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
 
     Handler uiHandler;
 
+    public final static String nameOfTheTrainerKey = "nameOfTheTrainer";
+    public final static String selectedIndexKey = "selectedIndex";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         activityName = this.getClass().getSimpleName();
@@ -50,6 +55,22 @@ public class MainActivity extends CustomizedActivity implements View.OnClickList
         confirmBtn.setOnClickListener(this);
 
         uiHandler = new Handler(getMainLooper());
+
+        SharedPreferences preferences = getSharedPreferences(
+                Application.class.getSimpleName(),
+                MODE_PRIVATE);
+
+        nameOfTheTrainer = preferences.getString(nameOfTheTrainerKey, null);
+        selectedOptionIndex = preferences.getInt(selectedIndexKey, 0);
+
+        if(nameOfTheTrainer == null) {
+            //TODO: show confirm button, nameEditText and optionGroup.
+            //hide progress bar
+        }
+        else {
+            //TODO: hide confirm button, nameEditText and optionGroup.
+            //show progress bar
+        }
     }
 
     @Override
