@@ -91,6 +91,9 @@ public class PokemonListFragment extends Fragment implements OnPokemonSelectedCh
                     .setCancelable(false)
                     .create();
 
+            setHasOptionsMenu(true);
+            setMenuVisibility(true);
+
         }
 
         return fragmentView;
