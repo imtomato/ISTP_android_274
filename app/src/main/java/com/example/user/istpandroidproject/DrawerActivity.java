@@ -67,15 +67,16 @@ public class DrawerActivity extends AppCompatActivity implements Drawer.OnDrawer
                 .build();
 
         //select first item and fire OnItemClick
-        naviDrawer.setSelectionAtPosition(defaultSelectedIndex + 1, true);
+        naviDrawer.setSelectionAtPosition(defaultSelectedIndex + 1, false);
+        displayFragment(false, fragments[0]);
     }
 
-    void displayFragment(Fragment fragment) {
+    void displayFragment(boolean toAdd, Fragment fragment) {
         FragmentTransaction transaction =
                 fragmentManager.beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
-
-        transaction.addToBackStack(null);
+        if(toAdd)
+            transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -105,7 +106,20 @@ public class DrawerActivity extends AppCompatActivity implements Drawer.OnDrawer
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-        displayFragment(fragments[position - 1]);
+        displayFragment(true, fragments[position - 1]);
         return false; //return false to bound back the drawer after clicking one of items
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(naviDrawer != null && naviDrawer.isDrawerOpen()) {
+            naviDrawer.closeDrawer();
+        }
+        else if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 }
