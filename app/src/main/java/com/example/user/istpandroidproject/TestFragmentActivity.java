@@ -11,6 +11,7 @@ import android.widget.Button;
 public class TestFragmentActivity extends AppCompatActivity implements View.OnClickListener{
 
     Fragment[] fragments;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +28,11 @@ public class TestFragmentActivity extends AppCompatActivity implements View.OnCl
         fragments[0] = TestFragment.newInstance("fragment 1");
         fragments[1] = TestFragment.newInstance("fragment 2");
 
+        fragmentManager = getSupportFragmentManager();
 
     }
 
     void displayFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction =
                 fragmentManager.beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
@@ -48,6 +49,16 @@ public class TestFragmentActivity extends AppCompatActivity implements View.OnCl
         }
         else if(viewId == R.id.fragmentBtn2) {
             displayFragment(fragments[1]);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        }
+        else {
+            super.onBackPressed();
         }
     }
 }
