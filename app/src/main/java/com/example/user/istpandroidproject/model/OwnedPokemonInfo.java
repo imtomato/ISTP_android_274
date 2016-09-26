@@ -3,10 +3,14 @@ package com.example.user.istpandroidproject.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by user on 2016/9/5.
@@ -136,16 +140,11 @@ public class OwnedPokemonInfo extends ParseObject implements Parcelable {
         put(type2Key, type2Index);
     }
 
-    boolean skillHaveBeenInited = false;
-    boolean skillHaveBeenModified = false;
+    boolean skillNeedToBeRefreshed = true;
 
     public String[] getSkills() {
-        if(!skillHaveBeenInited) {
-            skillHaveBeenInited = true;
-            this.skills = readSkillFromParseObjectStorage();
-        }
-        else if(skillHaveBeenModified) {
-            skillHaveBeenModified = false;
+        if(skillNeedToBeRefreshed) {
+            skillNeedToBeRefreshed = false;
             this.skills = readSkillFromParseObjectStorage();
         }
 
@@ -170,6 +169,33 @@ public class OwnedPokemonInfo extends ParseObject implements Parcelable {
         }
 
         put(skillKey, skillList);
-        skillHaveBeenModified = true;
+        skillNeedToBeRefreshed = true;
     }
+
+    public static ParseQuery<OwnedPokemonInfo> getQuery() {
+        return ParseQuery.getQuery(OwnedPokemonInfo.class);
+    }
+
+    public static final String localDBTableName = OwnedPokemonInfo.class.getSimpleName();
+    public static void initTable(final ArrayList<OwnedPokemonInfo> ownedPokemonInfos) {
+        OwnedPokemonInfo.unpinAllInBackground(localDBTableName);
+        OwnedPokemonInfo.getQuery().findInBackground(new FindCallback<OwnedPokemonInfo>() {
+            @Override
+            public void done(List<OwnedPokemonInfo> objects, ParseException e) {
+                if(e == null && objects != null) {
+                    OwnedPokemonInfo.deleteAllInBackground(objects);
+                }
+
+                saveToDB(ownedPokemonInfos);
+            }
+        });
+    }
+
+    public static void saveToDB(ArrayList<OwnedPokemonInfo> ownedPokemonInfos) {
+        OwnedPokemonInfo.pinAllInBackground(ownedPokemonInfos);
+        for(OwnedPokemonInfo ownedPokemonInfo : ownedPokemonInfos) {
+            ownedPokemonInfo.saveEventually();
+        }
+    }
+
 }
