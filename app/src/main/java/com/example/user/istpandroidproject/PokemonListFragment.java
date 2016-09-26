@@ -1,8 +1,10 @@
 package com.example.user.istpandroidproject;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,13 +20,16 @@ import android.widget.Toast;
 
 import com.example.user.istpandroidproject.model.OwnedPokemonInfo;
 import com.example.user.istpandroidproject.model.OwnedPokemonInfoDataManager;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by user on 2016/9/22.
  */
-public class PokemonListFragment extends Fragment implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener{
+public class PokemonListFragment extends Fragment implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener, FindCallback<OwnedPokemonInfo>{
 
     public static PokemonListFragment newInstance() {
 
@@ -42,6 +47,11 @@ public class PokemonListFragment extends Fragment implements OnPokemonSelectedCh
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ownedPokemonInfos = new ArrayList<>();
+        prepareListViewData();
+    }
+
+    void loadFromCSV() {
         Intent srcIntent = getActivity().getIntent();
         int selectedOptionIndex = srcIntent.getIntExtra(MainActivity.selectedOptionIndexKey, 0);
 
@@ -50,12 +60,38 @@ public class PokemonListFragment extends Fragment implements OnPokemonSelectedCh
 
         dataManager.loadListViewData();
 
-        ownedPokemonInfos =
-                dataManager.getOwnedPokemonInfos();
+        ArrayList<OwnedPokemonInfo> temp = dataManager.getOwnedPokemonInfos();
+        for(OwnedPokemonInfo ownedPokemonInfo : temp) {
+            ownedPokemonInfos.add(ownedPokemonInfo);
+        }
 
         ArrayList<OwnedPokemonInfo> initThreePokemonInfos = dataManager.getInitThreePokemonInfos();
         OwnedPokemonInfo selectedPokemon = initThreePokemonInfos.get(selectedOptionIndex);
         ownedPokemonInfos.add(0, selectedPokemon);
+    }
+
+    public final static String recordIsInDBKey = "recordIsInDB";
+
+    void prepareListViewData() {
+        SharedPreferences preferences = getActivity().getSharedPreferences(
+                PokemonListFragment.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+
+        boolean recordIsInDB = preferences.getBoolean(recordIsInDBKey, false);
+
+        if(!recordIsInDB) { //init
+            loadFromCSV();
+            OwnedPokemonInfo.initTable(ownedPokemonInfos);
+            preferences.edit().putBoolean(recordIsInDBKey, true).commit();
+        }
+        else { //read from DB
+            OwnedPokemonInfo.getQuery()
+                    .fromPin(OwnedPokemonInfo.localDBTableName) //read from local DB
+                    .findInBackground(this);
+
+            OwnedPokemonInfo.getQuery()
+                    .findInBackground(this); //default is read from cloud DB
+        }
 
     }
 
@@ -181,6 +217,19 @@ public class PokemonListFragment extends Fragment implements OnPokemonSelectedCh
             }
             else if(which == AlertDialog.BUTTON_POSITIVE) {
                 deleteSelectedPokemons();
+            }
+        }
+    }
+
+    //read from DB
+    @Override
+    public void done(List<OwnedPokemonInfo> objects, ParseException e) {
+        if(e == null) {
+            ownedPokemonInfos.clear();
+            ownedPokemonInfos.addAll(objects);
+
+            if(arrayAdapter != null) {
+                arrayAdapter.notifyDataSetChanged(); //update listView
             }
         }
     }
