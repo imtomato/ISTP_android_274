@@ -35,7 +35,7 @@ public class MyApplication extends Application {
                 .clientKey("AtuIJrkKgw95UKKnW5Y3Z6GjTKv46gvzJDwFSiZj")
                 .server("https://parseapi.back4app.com/")
                 .build());
-        
+
 
     }
 }
