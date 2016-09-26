@@ -145,7 +145,7 @@ public class PokemonListFragment extends Fragment implements OnPokemonSelectedCh
 
     void deleteSelectedPokemons() {
         for(OwnedPokemonInfo ownedPokemonInfo : arrayAdapter.selectedPokemonInfos) {
-            arrayAdapter.remove(ownedPokemonInfo);
+            removePokemonInfo(ownedPokemonInfo);
         }
         arrayAdapter.selectedPokemonInfos.clear();
         getActivity().invalidateOptionsMenu();
@@ -197,7 +197,7 @@ public class PokemonListFragment extends Fragment implements OnPokemonSelectedCh
                 OwnedPokemonInfo ownedPokemonInfo =
                         arrayAdapter.getItemWithName(data.getStringExtra(OwnedPokemonInfo.nameKey));
 
-                arrayAdapter.remove(ownedPokemonInfo);
+                removePokemonInfo(ownedPokemonInfo);
                 return;
             }
             else if(resultCode == DetailActivity.levelUp) {
@@ -232,5 +232,20 @@ public class PokemonListFragment extends Fragment implements OnPokemonSelectedCh
                 arrayAdapter.notifyDataSetChanged(); //update listView
             }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        OwnedPokemonInfo.saveToDB(ownedPokemonInfos);
+    }
+
+    void removePokemonInfo(OwnedPokemonInfo ownedPokemonInfo) {
+        if(arrayAdapter != null)
+            arrayAdapter.remove(ownedPokemonInfo);
+
+        //remove from DB
+        ownedPokemonInfo.unpinInBackground(OwnedPokemonInfo.localDBTableName); //remove from local DB
+        ownedPokemonInfo.deleteEventually(); //delete from cloud DB
     }
 }
