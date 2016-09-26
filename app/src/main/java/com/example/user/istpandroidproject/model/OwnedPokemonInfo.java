@@ -3,10 +3,14 @@ package com.example.user.istpandroidproject.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 /**
  * Created by user on 2016/9/5.
  */
-public class OwnedPokemonInfo implements Parcelable {
+@ParseClassName("OwnedPokemonInfo")
+public class OwnedPokemonInfo extends ParseObject implements Parcelable {
 
     public final static String nameKey = "name";
     public final static String pokeIdKey = "pokeId";
