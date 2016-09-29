@@ -89,6 +89,8 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
             return;
         }
 
+        pokemonMapManager.requestPokemonServer();
+
         if(locationRequest == null)
         {
             locationRequest = new LocationRequest();
