@@ -117,9 +117,14 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
         Toast.makeText(getContext(), "Google Api Client Connection Failed", Toast.LENGTH_SHORT).show();
     }
 
+    boolean firstRequestLocation = true;
+
     @Override
     public void onLocationChanged(Location location) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17);
-        googleMap.moveCamera(cameraUpdate);
+        if(firstRequestLocation) {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17);
+            googleMap.moveCamera(cameraUpdate);
+            firstRequestLocation = false;
+        }
     }
 }
