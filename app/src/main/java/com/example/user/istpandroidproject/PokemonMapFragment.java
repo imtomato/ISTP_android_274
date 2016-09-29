@@ -83,6 +83,7 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
             {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
             }
+            return;
         }
 
         if(locationRequest == null)
