@@ -71,6 +71,7 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
                             .addOnConnectionFailedListener(this)
                             .addApi(LocationServices.API)
                             .build();
+            googleApiClient.connect();
         }
     }
 
