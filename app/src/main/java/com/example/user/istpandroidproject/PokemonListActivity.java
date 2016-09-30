@@ -1,5 +1,7 @@
 package com.example.user.istpandroidproject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,18 +11,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.user.istpandroidproject.model.OwnedPokemonInfo;
 import com.example.user.istpandroidproject.model.OwnedPokemonInfoDataManager;
 
 import java.util.ArrayList;
 
-public class PokemonListActivity extends AppCompatActivity implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener{
+public class PokemonListActivity extends CustomizedActivity implements OnPokemonSelectedChangeListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener{
 
     PokemonListAdapter arrayAdapter;
+    ArrayList<OwnedPokemonInfo> ownedPokemonInfos;
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activityName = this.getClass().getSimpleName();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon_list);
 
@@ -32,7 +38,7 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
 
         dataManager.loadListViewData();
 
-        ArrayList<OwnedPokemonInfo> ownedPokemonInfos =
+        ownedPokemonInfos =
                 dataManager.getOwnedPokemonInfos();
 
         ArrayList<OwnedPokemonInfo> initThreePokemonInfos = dataManager.getInitThreePokemonInfos();
@@ -49,6 +55,15 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
         ListView listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(this);
+
+        alertDialog = new AlertDialog
+                .Builder(this)
+                .setTitle("警告")
+                .setMessage("你確定要刪除這些神奇寶貝嗎?")
+                .setPositiveButton("確認", this)
+                .setNegativeButton("取消", this)
+                .setCancelable(false)
+                .create();
     }
 
     @Override
@@ -63,16 +78,19 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
         }
     }
 
+    void deleteSelectedPokemons() {
+        for(OwnedPokemonInfo ownedPokemonInfo : arrayAdapter.selectedPokemonInfos) {
+            arrayAdapter.remove(ownedPokemonInfo);
+        }
+        arrayAdapter.selectedPokemonInfos.clear();
+        invalidateOptionsMenu();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.action_delete) {
-            for(OwnedPokemonInfo ownedPokemonInfo : arrayAdapter.selectedPokemonInfos) {
-                arrayAdapter.remove(ownedPokemonInfo);
-            }
-            arrayAdapter.selectedPokemonInfos.clear();
-            invalidateOptionsMenu();
+            alertDialog.show();
             return true;
         }
         else if(itemId == R.id.action_settings) {
@@ -91,6 +109,7 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
     }
 
     public final static int detailActivityRequestCode = 1;
+    public final static String ownedPokemonInfoKey = "parcelable";
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -98,9 +117,42 @@ public class PokemonListActivity extends AppCompatActivity implements OnPokemonS
 
         Intent intent = new Intent();
         intent.setClass(PokemonListActivity.this, DetailActivity.class);
-        intent.putExtra("parcelable", data);
+        intent.putExtra(ownedPokemonInfoKey, data);
 
         startActivityForResult(intent, detailActivityRequestCode);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == detailActivityRequestCode) {
+
+            if(resultCode == DetailActivity.removeFromList) {
+                OwnedPokemonInfo ownedPokemonInfo =
+                        arrayAdapter.getItemWithName(data.getStringExtra(OwnedPokemonInfo.nameKey));
+
+                arrayAdapter.remove(ownedPokemonInfo);
+                return;
+            }
+            else if(resultCode == DetailActivity.levelUp) {
+
+            }
+
+
+        }
+
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if(dialog.equals(alertDialog)) {
+            if(which == AlertDialog.BUTTON_NEGATIVE) {
+                Toast.makeText(this, "取消刪除", Toast.LENGTH_SHORT).show();
+            }
+            else if(which == AlertDialog.BUTTON_POSITIVE) {
+                deleteSelectedPokemons();
+            }
+        }
     }
 }
