@@ -44,8 +44,10 @@ public class PokemonMapManager implements RequestCallback {
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 PokemonMarkerInfo markerInfo = PokemonMarkerInfo.newInstanceWithJSONObject(jsonObject, type);
-                markerInfos.put(markerInfo.id, markerInfo);
-                markerInfo.addMarkerToGoogleMap(googleMap);
+                if(markerInfos.get(markerInfo.id) == null) {
+                    markerInfos.put(markerInfo.id, markerInfo);
+                    markerInfo.addMarkerToGoogleMap(googleMap);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
