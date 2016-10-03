@@ -16,6 +16,10 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by user on 2016/10/3.
  */
@@ -30,6 +34,7 @@ public class PokemonMarkerInfo implements ImageLoadingListener {
     Marker marker;
     String imageURL;
     LatLng location;
+    long expirationTime = 0;
     String id;
 
     public static PokemonMarkerInfo newInstanceWithJSONObject(JSONObject jsonObject, PokemonMarkerType type) throws JSONException {
@@ -45,6 +50,10 @@ public class PokemonMarkerInfo implements ImageLoadingListener {
         {
             pokemonMarkerInfo.id = jsonObject.getString("encounter_id");
             pokemonMarkerInfo.imageURL = "http://www.csie.ntu.edu.tw/~r03944003/listImg/" + jsonObject.getString("pokemon_id") +".png";
+            if(jsonObject.getLong("disappear_time") != JSONObject.NULL)
+            {
+                pokemonMarkerInfo.expirationTime = jsonObject.getLong("disappear_time");
+            }
         }
         else
         {
@@ -55,11 +64,49 @@ public class PokemonMarkerInfo implements ImageLoadingListener {
             }
             else
             {
+                pokemonMarkerInfo.expirationTime = jsonObject.getLong("lure_expiration");
                 pokemonMarkerInfo.imageURL = "http://www.csie.ntu.edu.tw/~r03944003/forts/PstopLured.png";
             }
-
         }
         return pokemonMarkerInfo;
+    }
+
+    public boolean update()
+    {
+
+        if(type == PokemonMarkerType.POKEMON)
+        {
+            Long time = System.currentTimeMillis();
+            if(time > expirationTime)
+            {
+                marker.remove();
+                return true;
+            }
+            DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+            Date date = new Date(expirationTime - time);
+
+            marker.setSnippet("Remain Time: " + dateFormat.format(date));
+            return false;
+        }
+        else if (type == PokemonMarkerType.STOP)
+        {
+            Long time = System.currentTimeMillis();
+            if(time > expirationTime && expirationTime > 0)
+            {
+                imageURL = "http://www.csie.ntu.edu.tw/~r03944003/forts/Pstop.png";
+                ImageLoader.getInstance().loadImage(imageURL, this);
+            }
+            if(expirationTime > 0) {
+                DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+                Date date = new Date(expirationTime - time);
+
+                marker.setSnippet("Remain Time: " + dateFormat.format(date));
+            }
+            return false;
+        }
+
+
+        return false;
     }
 
     public void addMarkerToGoogleMap(GoogleMap googleMap)

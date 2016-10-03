@@ -1,6 +1,7 @@
 package com.example.user.istpandroidproject.model;
 
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -10,7 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by user on 2016/9/29.
@@ -18,11 +21,21 @@ import java.util.HashMap;
 public class PokemonMapManager implements RequestCallback {
     GoogleMap googleMap;
     HashMap<String, PokemonMarkerInfo> markerInfos = new HashMap<>();
-
+    Handler handler;
+    Runnable updateMarkerInfo = new Runnable() {
+        @Override
+        public void run() {
+            clearMarkerInfo();
+            handler.postDelayed(updateMarkerInfo, 1000);
+        }
+    };
 
     public PokemonMapManager(GoogleMap googleMap)
     {
         this.googleMap = googleMap;
+        handler = new Handler();
+        handler.post(updateMarkerInfo);
+
     }
 
     public void requestPokemonServer()
@@ -35,6 +48,7 @@ public class PokemonMapManager implements RequestCallback {
         addMarkerInfoFromJsonArray(gyms, PokemonMarkerInfo.PokemonMarkerType.GYM);
         addMarkerInfoFromJsonArray(pokemons, PokemonMarkerInfo.PokemonMarkerType.POKEMON);
         addMarkerInfoFromJsonArray(stops, PokemonMarkerInfo.PokemonMarkerType.STOP);
+//        clearMarkerInfo();
     }
 
     public void addMarkerInfoFromJsonArray(JSONArray jsonArray, PokemonMarkerInfo.PokemonMarkerType type)
@@ -54,6 +68,25 @@ public class PokemonMapManager implements RequestCallback {
         }
     }
 
+    public void clearMarkerInfo()
+    {
+        List<String> removeKey = new ArrayList<>();
+        for (String key : markerInfos.keySet())
+        {
+            PokemonMarkerInfo pokemonMarkerInfo = markerInfos.get(key);
+            if(pokemonMarkerInfo.update())
+            {
+                Log.d("Update Marker", "Remove Marker");
+                removeKey.add(key);
+            }
+        }
+
+        for(String key : removeKey)
+        {
+            markerInfos.remove(key);
+        }
+    }
+
     public static class requestTask extends AsyncTask<String, Void, String>{
 
         WeakReference<RequestCallback> requestCallbackWeakReference;
@@ -68,7 +101,7 @@ public class PokemonMapManager implements RequestCallback {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.d("Pokemon Data", s);
+//            Log.d("Pokemon Data", s);
             RequestCallback requestCallback = requestCallbackWeakReference.get();
             if(requestCallback != null && s != null)
             {
