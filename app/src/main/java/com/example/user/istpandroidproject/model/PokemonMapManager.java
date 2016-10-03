@@ -10,12 +10,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 /**
  * Created by user on 2016/9/29.
  */
 public class PokemonMapManager implements RequestCallback {
     GoogleMap googleMap;
+    HashMap<String, PokemonMarkerInfo> markerInfos = new HashMap<>();
+
+
     public PokemonMapManager(GoogleMap googleMap)
     {
         this.googleMap = googleMap;
@@ -28,7 +32,24 @@ public class PokemonMapManager implements RequestCallback {
 
     @Override
     public void callback(JSONArray gyms, JSONArray pokemons, JSONArray stops) {
+        addMarkerInfoFromJsonArray(gyms, PokemonMarkerInfo.PokemonMarkerType.GYM);
+        addMarkerInfoFromJsonArray(pokemons, PokemonMarkerInfo.PokemonMarkerType.POKEMON);
+        addMarkerInfoFromJsonArray(stops, PokemonMarkerInfo.PokemonMarkerType.STOP);
+    }
 
+    public void addMarkerInfoFromJsonArray(JSONArray jsonArray, PokemonMarkerInfo.PokemonMarkerType type)
+    {
+        for (int i = 0; i < jsonArray.length() ; i++)
+        {
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                PokemonMarkerInfo markerInfo = PokemonMarkerInfo.newInstanceWithJSONObject(jsonObject, type);
+                markerInfos.put(markerInfo.id, markerInfo);
+                markerInfo.addMarkerToGoogleMap(googleMap);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static class requestTask extends AsyncTask<String, Void, String>{

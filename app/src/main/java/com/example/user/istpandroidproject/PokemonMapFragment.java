@@ -130,6 +130,7 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17);
             googleMap.moveCamera(cameraUpdate);
             firstRequestLocation = false;
+            pokemonMapManager.requestPokemonServer();
         }
     }
 
