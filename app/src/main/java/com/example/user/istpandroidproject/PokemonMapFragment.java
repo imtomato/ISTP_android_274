@@ -131,6 +131,7 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
             googleMap.moveCamera(cameraUpdate);
             firstRequestLocation = false;
         }
+        pokemonMapManager.requestPokemonServer();
     }
 
     public void getPokemons()
