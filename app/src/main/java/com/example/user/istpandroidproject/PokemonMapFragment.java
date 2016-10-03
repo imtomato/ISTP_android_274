@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.istpandroidproject.model.PokemonMapManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -36,6 +37,7 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
     GoogleMap googleMap;
     GoogleApiClient googleApiClient;
     LocationRequest locationRequest;
+    PokemonMapManager pokemonMapManager;
 
     public PokemonMapFragment() {
         // Required empty public constructor
@@ -59,6 +61,7 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        pokemonMapManager = new PokemonMapManager(googleMap);
         createGoogleApiClient();
     }
 
@@ -85,6 +88,8 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
             }
             return;
         }
+
+        pokemonMapManager.requestPokemonServer();
 
         if(locationRequest == null)
         {
@@ -126,5 +131,10 @@ public class PokemonMapFragment extends SupportMapFragment implements OnMapReady
             googleMap.moveCamera(cameraUpdate);
             firstRequestLocation = false;
         }
+    }
+
+    public void getPokemons()
+    {
+
     }
 }
